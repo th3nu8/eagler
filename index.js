@@ -1,99 +1,43 @@
-// This entire function will run immediately when loaded by the bookmarklet.
-(function() {
-    // Exit if run from an environment without a window (like a worker)
-    if (typeof window === 'undefined') return;
+// Bookmarklet function wrapped in an IIFE
+(async function() {
+    // -------------------------------------------------------------------------
+    // !!! IMPORTANT !!!
+    // REPLACE THIS PLACEHOLDER URL with the RAW link to your GitHub HTML file.
+    // A raw link starts with: https://raw.githubusercontent.com/...
+    // -------------------------------------------------------------------------
+    const githubUrl = 'https://cdn.jsdelivr.net/gh/donket-donk/EaglercraftX_1.8_u37_Offline_Signed@refs/heads/main/EaglercraftX_1.8_u37_Offline_Signed.html';
 
-    const originalTitle = document.title;
-    let content = '';
+    let htmlContent = '';
 
-    // --- 1. Get Selected Content or URL ---
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-        const selectedPlainText = selection.toString().trim();
+    try {
+        // 1. Fetch the raw HTML file content from GitHub
+        const response = await fetch(githubUrl);
 
-        // Simple regex to check if the selected text looks like a URL
-        // It looks for patterns like: example.com, www.example.org, or https://...
-        const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
-
-        if (urlRegex.test(selectedPlainText)) {
-             // If it looks like a URL, open it directly and exit.
-             // Prepend 'https://' if it's missing for reliable browsing.
-             const finalUrl = selectedPlainText.startsWith('http') ? selectedPlainText : 'https://' + selectedPlainText;
-             window.open(finalUrl, '_blank');
-             return; // Stop the script here!
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        // If it's not a URL, get the HTML content of the selection
-        const range = selection.getRangeAt(0);
-        const container = document.createElement('div');
-        container.appendChild(range.cloneContents());
-        content = container.innerHTML;
+        htmlContent = await response.text();
+
+    } catch (error) {
+        // If fetch fails (e.g., bad URL, CORS issue, file not found)
+        const errorMessage = `
+            <h1>Failed to Load GitHub Content</h1>
+            <p>Could not load HTML from the specified URL.</p>
+            <p><strong>Error:</strong> ${error.message}</p>
+            <p>Please ensure the URL in your bookmarklet code is the <strong>RAW</strong> link to the HTML file.</p>
+        `;
+        htmlContent = errorMessage;
     }
 
-    // --- 2. Fallback to entire body HTML if nothing was selected ---
-    if (!content.trim()) {
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = document.body.innerHTML;
-        
-        // Remove all script tags for a cleaner and safer isolation
-        tempDiv.querySelectorAll('script').forEach(script => script.remove());
-        content = tempDiv.innerHTML;
-        
-        console.log("Bookmarklet: No text selected. Injecting entire page body content (scripts removed).");
-    }
-
-    // --- 3. Construct the HTML for the new about:blank tab ---
-    const newHtml = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Isolated View: ${originalTitle}</title>
-            <!-- Clean, simple styling for the isolated content -->
-            <style>
-                body {
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                    line-height: 1.6;
-                    max-width: 800px;
-                    margin: 0 auto;
-                    padding: 20px;
-                    background-color: #f0f3f5;
-                    color: #2c3e50;
-                }
-                h1 {
-                    color: #3498db;
-                    border-bottom: 2px solid #ecf0f1;
-                    padding-bottom: 10px;
-                    margin-bottom: 20px;
-                }
-                .content-box {
-                    padding: 20px;
-                    border: 1px solid #c7dbe6;
-                    border-radius: 12px;
-                    background-color: #ffffff;
-                    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
-                }
-            </style>
-        </head>
-        <body>
-            <h1>Isolated Content from: ${originalTitle}</h1>
-            <div class="content-box">
-                <!-- Inject the scraped content here -->
-                ${content}
-            </div>
-        </body>
-        </html>
-    `;
-
-    // --- 4. Open and write to the new window ---
+    // 2. Open a new window and write the content
     const newWindow = window.open('about:blank', '_blank');
 
     if (newWindow) {
-        newWindow.document.write(newHtml);
+        newWindow.document.write(htmlContent);
         newWindow.document.close();
     } else {
-        // Pop-up block handler
-        console.error("Bookmarklet: Could not open new window. Check pop-up settings.");
+        // Handle pop-up blocker
+        console.error("Pop-up blocked. Please allow pop-ups for this site to run the bookmarklet.");
     }
 })();
