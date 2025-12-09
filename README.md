@@ -8,4 +8,4 @@
 
 # EaglercraftX Iframe
 ### If you want to iframe this in your website use this code:
-**```<iframe src="https://github.com/th3nu8/eagler/blob/main/embed.html"></iframe>```**
+**```<iframe src="https://th3nu8.github.io/eagler/"></iframe>```**
