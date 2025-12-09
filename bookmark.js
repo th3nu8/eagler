@@ -7,7 +7,7 @@
         },
         {
             name: "Eaglercraft 1.8",
-            url: "https://cdn.jsdelivr.net/gh/th3nu8/eagler@refs/heads/main/EaglercraftX_1.8_u53_Offline_Signed.html"
+            url: "https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/EaglercraftX_1.8_u53_Offline_Signed.html"
         },
         {
             name:"Eaglercraft 1.5.2",
