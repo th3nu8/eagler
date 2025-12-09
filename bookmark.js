@@ -3,7 +3,7 @@
     const LAUNCH_FILES = [
         {
             name:"Eaglercraft 1.12",
-            url:"https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/v1.12.html"
+            url:"https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/eag1.12.html"
         },
         {
             name: "Eaglercraft 1.8",
