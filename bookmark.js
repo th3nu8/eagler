@@ -3,10 +3,21 @@
 
     const LAUNCH_FILES = [
         {
+            name:"Eaglercraft 1.12",
+            url:"https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/1.12.html"
+        },
+        {
             name: "Eaglercraft 1.8",
             url: "https://cdn.jsdelivr.net/gh/th3nu8/eagler@refs/heads/main/EaglercraftX_1.8_u53_Offline_Signed.html"
         },
-        // --- Easily add more files here! ---
+        {
+            name:"Eaglercraft 1.5.2",
+            url:"https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/1.5.2.html"
+        },
+        {
+            name:"Eaglercraft Beta 1.7.3",
+            url:"https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/1.7.3.html"
+        }
     ];
 
     const BACKGROUND_IMAGE_URL = 'https://raw.githubusercontent.com/th3nu8/eagler/main/IMG_0018.jpeg';
