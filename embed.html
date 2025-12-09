@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eaglercraft Launcher</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: transparent;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .launcher-container {
+            width: 90%;
+            max-width: 400px;
+            border: 4px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            color: white;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        (function() {
+            const LAUNCH_FILES = [
+                {
+                    name:"Eaglercraft 1.12",
+                    url:"https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/v1.12.html"
+                },
+                {
+                    name: "Eaglercraft 1.8",
+                    url: "https://cdn.jsdelivr.net/gh/th3nu8/eagler@refs/heads/main/EaglercraftX_1.8_u53_Offline_Signed.html"
+                },
+                {
+                    name:"Eaglercraft 1.5.2",
+                    url:"https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/1.5.2.html"
+                },
+                {
+                    name:"Eaglercraft Beta 1.7.3",
+                    url:"https://cdn.jsdelivr.net/gh/th3nu8/eagler@main/1.7.3.html"
+                }
+            ];
+
+            const BACKGROUND_IMAGE_URL = 'https://raw.githubusercontent.com/th3nu8/eagler/main/IMG_0018.jpeg';
+            const TEXTURE_IMAGE_URL = 'https://raw.githubusercontent.com/th3nu8/eagler/main/IMG_0019.jpeg';
+            const HEADER_TEXT = "Eaglercraft Bookmark Launcher";
+
+            function launchHtmlInNewWindow(rawHtmlUrl) {
+                fetch(rawHtmlUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch HTML: ' + response.statusText);
+                        }
+                        return response.text();
+                    })
+                    .then(htmlText => {
+                        const newWindow = window.open('about:blank', '_blank'); 
+
+                        if (!newWindow) {
+                            alert("Popup blocked. Please allow popups for this site and try again.");
+                            return;
+                        }
+
+                        newWindow.document.write(htmlText);
+                        newWindow.document.close();
+                    })
+                    .catch(e => {
+                        console.error("Error loading external HTML:", e);
+                        alert(`Could not load HTML file from ${rawHtmlUrl}. Check the console for details.`);
+                    });
+            }
+
+            function createLauncherUI() {
+                const mainContainer = document.createElement('div');
+                mainContainer.className = 'launcher-container'; 
+                
+                const style = document.createElement('style');
+                style.textContent = `
+                    .launcher-container {
+                        background: url(${BACKGROUND_IMAGE_URL}) no-repeat center center/cover;
+                        backdrop-filter: blur(3px);
+                    }
+
+                    .launcher-header {
+                        width: 100%;
+                        height: 50px;
+                        background: url(${TEXTURE_IMAGE_URL}) repeat-x center center/auto 100%;
+                        color: white;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0 10px;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+                        border-bottom: 2px solid #555;
+                    }
+
+                    .header-title {
+                        margin: 0;
+                        font-size: 1.2em;
+                        font-weight: bold;
+                        text-shadow: 2px 2px 4px #000;
+                        text-align: center;
+                    }
+
+                    .button-content {
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+                    
+                    .launch-button {
+                        padding: 10px 15px;
+                        border: 2px solid white;
+                        border-radius: 5px;
+                        background: url(${TEXTURE_IMAGE_URL}) repeat center center/auto 100%; 
+                        color: white;
+                        font-size: 1em;
+                        cursor: pointer;
+                        transition: opacity 0.3s ease;
+                        font-weight: bold;
+                        text-shadow: 1px 1px 2px #000;
+                    }
+                    .launch-button:hover {
+                        opacity: 0.85; 
+                    }
+                `;
+                document.head.appendChild(style);
+
+                const header = document.createElement('div');
+                header.className = 'launcher-header';
+                
+                const title = document.createElement('h1');
+                title.className = 'header-title';
+                title.textContent = HEADER_TEXT;
+                header.appendChild(title);
+                
+                mainContainer.appendChild(header);
+
+                const buttonContent = document.createElement('div');
+                buttonContent.className = 'button-content';
+
+                LAUNCH_FILES.forEach(file => {
+                    const button = document.createElement('button');
+                    button.className = 'launch-button';
+                    button.textContent = file.name;
+                    
+                    button.addEventListener('click', () => launchHtmlInNewWindow(file.url));
+
+                    buttonContent.appendChild(button);
+                });
+
+                mainContainer.appendChild(buttonContent);
+
+                document.body.appendChild(mainContainer);
+            }
+
+            createLauncherUI(); 
+            
+        })();
+    </script>
+</body>
+</html>
