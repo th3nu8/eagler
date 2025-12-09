@@ -1,5 +1,4 @@
 (function() {
-    // --- Configuration: HTML Files and Image URLs ---
 
     const LAUNCH_FILES = [
         {
@@ -21,16 +20,9 @@
     ];
 
     const BACKGROUND_IMAGE_URL = 'https://raw.githubusercontent.com/th3nu8/eagler/main/IMG_0018.jpeg';
-    // This image is used for the header bar AND the button backgrounds.
     const TEXTURE_IMAGE_URL = 'https://raw.githubusercontent.com/th3nu8/eagler/main/IMG_0019.jpeg';
     const HEADER_TEXT = "Eaglercraft Bookmark Launcher";
 
-    // --- Core Functions ---
-
-    /**
-     * Fetches the content of a remote HTML file and opens it in a new about:blank window.
-     * @param {string} rawHtmlUrl The URL of the HTML file to fetch.
-     */
     function launchHtmlInNewWindow(rawHtmlUrl) {
         fetch(rawHtmlUrl)
             .then(response => {
@@ -56,27 +48,20 @@
             });
     }
 
-    /**
-     * Creates and injects the UI element onto the current page using a Shadow DOM.
-     */
     function createLauncherUI() {
-        // 1. Create the container for the Shadow DOM
         const hostElement = document.createElement('div');
         hostElement.id = 'launcher-host';
         document.body.appendChild(hostElement);
 
-        // 2. Attach the Shadow DOM to isolate styles
         const shadowRoot = hostElement.attachShadow({ mode: 'open' });
 
-        // 3. Create the necessary CSS styles (scoped to the Shadow DOM)
         const style = document.createElement('style');
         style.textContent = `
-            /* Container for the entire centered UI */
             .launcher-container {
                 position: fixed;
-                top: 50%; /* Center vertically */
-                left: 50%; /* Center horizontally */
-                transform: translate(-50%, -50%); /* Fine-tune centering */
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
                 width: 90%;
                 max-width: 400px;
                 border: 4px solid #333;
@@ -88,10 +73,9 @@
                 color: white;
                 font-family: Arial, sans-serif;
                 backdrop-filter: blur(3px);
-                box-sizing: border-box; /* Crucial for isolated sizing */
+                box-sizing: border-box;
             }
 
-            /* Header texture at the top of the UI window */
             .launcher-header {
                 width: 100%;
                 height: 50px;
@@ -113,7 +97,6 @@
                 text-align: center;
             }
 
-            /* Content area for buttons */
             .button-content {
                 padding: 20px;
                 display: flex;
@@ -121,30 +104,27 @@
                 gap: 10px;
             }
             
-            /* Button styles: NOW using the texture image as background */
             .launch-button {
                 padding: 10px 15px;
                 border: 2px solid white;
                 border-radius: 5px;
-                background: url(${TEXTURE_IMAGE_URL}) repeat center center/auto 100%; /* Use the texture image */
+                background: url(${TEXTURE_IMAGE_URL}) repeat center center/auto 100%;
                 color: white;
                 font-size: 1em;
                 cursor: pointer;
                 transition: opacity 0.3s ease;
                 font-weight: bold;
-                text-shadow: 1px 1px 2px #000; /* Add text shadow for visibility */
+                text-shadow: 1px 1px 2px #000;
             }
             .launch-button:hover {
-                opacity: 0.85; /* Simple visual feedback on hover */
+                opacity: 0.85;
             }
         `;
         shadowRoot.appendChild(style);
 
-        // 4. Create the main launcher container
         const launcherContainer = document.createElement('div');
         launcherContainer.className = 'launcher-container';
 
-        // 5. Create Header Bar (Image + Text)
         const header = document.createElement('div');
         header.className = 'launcher-header';
         
@@ -155,17 +135,14 @@
         
         launcherContainer.appendChild(header);
 
-        // 6. Create Button Content Area
         const buttonContent = document.createElement('div');
         buttonContent.className = 'button-content';
 
-        // 7. Create and add a button for each file
         LAUNCH_FILES.forEach(file => {
             const button = document.createElement('button');
             button.className = 'launch-button';
             button.textContent = file.name;
             
-            // Attach the click event to launch the game
             button.addEventListener('click', () => launchHtmlInNewWindow(file.url));
 
             buttonContent.appendChild(button);
@@ -173,11 +150,8 @@
 
         launcherContainer.appendChild(buttonContent);
 
-        // 8. Append the launcher UI to the Shadow DOM root
         shadowRoot.appendChild(launcherContainer);
     }
-
-    // --- Initialization ---
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', createLauncherUI);
