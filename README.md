@@ -5,7 +5,7 @@
 3. Make a bookmark with it
 4. Play EaglercraftX!
 ## Make sure popups are allowed!!!
-### Works best on this site: *** https://sans.style ***
+### Works best on this site: **https://sans.style**
 
 # EaglercraftX Iframe
 ### If you want to iframe this in your website use this code:
